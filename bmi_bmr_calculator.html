@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BMI & BMR Calculator</title>
+    <!-- React and Babel CDN -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .app-container {
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Limit card width */
+  }
+
+  .card {
+    background: white;
+    padding: 30px 25px;
+    border-radius: 20px;
+    width: 100%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease;
+    box-sizing: border-box;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    box-sizing: border-box;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+    background: #4b79a1;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #283e51;
+  }
+
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .btn-container button {
+    flex: 1; /* Make buttons same width */
+  }
+
+  .bmi-btn {
+    background: #00b09b;
+  }
+
+  .bmr-btn {
+    background: #f46b45;
+  }
+
+  .yes-btn {
+    background: #00c853;
+  }
+
+  .no-btn {
+    background: #d32f2f;
+  }
+
+  .result {
+    font-weight: bold;
+    color: #1b1b1b;
+    margin: 15px 0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+</style>
+
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      function App() {
+        const [page, setPage] = React.useState("login");
+        const [name, setName] = React.useState("");
+        const [dob, setDob] = React.useState("");
+        const [password, setPassword] = React.useState("");
+
+        const [weight, setWeight] = React.useState("");
+        const [height, setHeight] = React.useState("");
+        const [age, setAge] = React.useState("");
+        const [gender, setGender] = React.useState("male");
+
+        const [result, setResult] = React.useState("");
+        const [bmiCategory, setBmiCategory] = React.useState("");
+
+        const handleLogin = (e) => {
+          e.preventDefault();
+          if (name && dob && password) {
+            setPage("options");
+          } else {
+            alert("Please fill all fields!");
+          }
+        };
+
+        const resetFields = () => {
+          setWeight("");
+          setHeight("");
+          setAge("");
+          setResult("");
+          setBmiCategory("");
+        };
+
+        // ✅ BMI Calculation with Category
+        const handleBMICalc = () => {
+          if (weight && height) {
+            const h = height / 100;
+            const bmi = (weight / (h * h)).toFixed(2);
+            setResult(`Your BMI is ${bmi}`);
+
+            // Category
+            let category = "";
+            if (bmi < 18.5) category = "Underweight / குறைந்த எடை";
+            else if (bmi < 24.9) category = "Normal weight / சரியான எடை";
+            else if (bmi < 29.9) category = "Overweight / அதிக எடை";
+            else category = "Obese / மிக அதிக எடை";
+
+            setBmiCategory(category);
+          } else {
+            alert("Please enter both weight and height!");
+          }
+        };
+
+        // ✅ BMR Calculation
+        const handleBMRCalc = () => {
+          if (weight && height && age) {
+            let bmrValue;
+            if (gender === "male") {
+              bmrValue = 88.36 + 13.4 * weight + 4.8 * height - 5.7 * age;
+            } else {
+              bmrValue = 447.6 + 9.2 * weight + 3.1 * height - 4.3 * age;
+            }
+            setResult(`Your BMR is ${bmrValue.toFixed(2)} kcal/day`);
+          } else {
+            alert("Please enter all fields!");
+          }
+        };
+
+        return (
+          <div className="app-container">
+            {/* Login Page */}
+            {page === "login" && (
+              <div className="card">
+                <h2>💪 BMI & BMR Calculator</h2>
+                <form onSubmit={handleLogin}>
+                  <input
+                    type="text"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <input
+                    type="date"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                  />
+                  <input
+                    type="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button type="submit">Login</button>
+                </form>
+              </div>
+            )}
+
+            {/* Options Page */}
+            {page === "options" && (
+              <div className="card">
+                <h2>Welcome, {name} 🎉</h2>
+                <p>Choose what you want to calculate:</p>
+                <div className="btn-container">
+                  <button
+                    className="bmi-btn"
+                    onClick={() => {
+                      resetFields();
+                      setPage("bmi");
+                    }}
+                  >
+                    BMI Calculation
+                  </button>
+                  <button
+                    className="bmr-btn"
+                    onClick={() => {
+                      resetFields();
+                      setPage("bmr");
+                    }}
+                  >
+                    BMR Calculation
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* BMI Page */}
+            {page === "bmi" && (
+              <div className="card">
+                <h2>BMI Calculator 🧮</h2>
+                <input
+                  type="number"
+                  placeholder="Weight (kg)"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Height (cm)"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                />
+                <button onClick={handleBMICalc}>Calculate BMI</button>
+
+                {result && (
+                  <>
+                    <p className="result">{result}</p>
+                    {bmiCategory && (
+                      <p className="result">Category: {bmiCategory}</p>
+                    )}
+                    <p>Do you want to calculate BMR also?</p>
+                    <div className="btn-container">
+                      <button
+                        className="yes-btn"
+                        onClick={() => {
+                          resetFields();
+                          setPage("bmr");
+                        }}
+                      >
+                        Yes
+                      </button>
+                      <button
+                        className="no-btn"
+                        onClick={() => setPage("thankyou")}
+                      >
+                        No
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* BMR Page */}
+            {page === "bmr" && (
+              <div className="card">
+                <h2>BMR Calculator 🔥</h2>
+                <input
+                  type="number"
+                  placeholder="Weight (kg)"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Height (cm)"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Age"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                />
+                <select
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <button onClick={handleBMRCalc}>Calculate BMR</button>
+
+                {result && (
+                  <>
+                    <p className="result">{result}</p>
+                    <p>Do you want to calculate BMI also?</p>
+                    <div className="btn-container">
+                      <button
+                        className="yes-btn"
+                        onClick={() => {
+                          resetFields();
+                          setPage("bmi");
+                        }}
+                      >
+                        Yes
+                      </button>
+                      <button
+                        className="no-btn"
+                        onClick={() => setPage("thankyou")}
+                      >
+                        No
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Thank You Page */}
+            {page === "thankyou" && (
+              <div className="card">
+                <h2>🎯 Thank You, {name}!</h2>
+                <p>Your calculations are complete.</p>
+                <button
+                  onClick={() => {
+                    resetFields();
+                    setPage("options");
+                  }}
+                >
+                  Go Back to Menu
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
