@@ -21,13 +21,13 @@ It allows users to log in, calculate BMI with categories, calculate BMR based on
 
 ### BMI & BMR Calculator Screenshots
 
-1. ![1](Outputs/1.png)
-2. ![2](Outputs/2.png)
-3. ![3](Outputs/3.png)
-4. ![4](Outputs/4.png)
-5. ![5](Outputs/5.png)
-6. ![6](Outputs/6.png)
-7. ![7](Outputs/7.png)
+1. ![1](outputs/1.png)
+2. ![2](outputs/2.png)
+3. ![3](outputs/3.png)
+4. ![4](outputs/4.png)
+5. ![5](outputs/5.png)
+6. ![6](outputs/6.png)
+7. ![7](outputs/7.png)
 
 
 
