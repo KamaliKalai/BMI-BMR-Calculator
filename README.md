@@ -17,3 +17,6 @@ It allows users to log in, calculate BMI with categories, calculate BMR based on
 4. The user can **switch between BMI and BMR calculations** as many times as they want.
 5. The results are displayed with clear messages, including BMI category or BMR in kcal/day.
 
+
+
+
